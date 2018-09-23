@@ -1,0 +1,27 @@
+{
+  "name": "test2",
+  "version": "0.0.0",
+  "description": "Tessel project",
+  "main": "index.js",
+  "dependencies": {
+    "@types/express": "^4.16.0",
+    "@types/johnny-five": "0.0.37",
+    "@types/lodash": "^4.14.116",
+    "express": "^4.16.3",
+    "johnny-five": "^1.0.0",
+    "lodash": "^4.17.11",
+    "nodemon": "^1.18.4",
+    "tessel-io": "^1.2.0",
+    "typescript": "^3.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "www.github.com/tessel/t2-cli",
+  "keywords": [
+    "Tessel"
+  ],
+  "license": "MIT",
+  "readme": "A bare bones Tessel 2 blinky script."
+}
