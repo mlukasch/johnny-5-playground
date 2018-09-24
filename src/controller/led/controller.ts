@@ -1,17 +1,25 @@
 import { Request, Response } from 'express';
 import * as ledService from '../../services/ledService';
 
-export const handleLedToggle = async (req: Request, res: Response) => {
-	await ledService.toggleLed();
-	return res.redirect('/');
-};
+enum LedCommand {
+	toggleLed = 'toggle',
+	cycleLed = 'cycle',
+	pulseLed = 'pulse'
+}
 
-export const handleLedPulse = async (req: Request, res: Response) => {
-	await ledService.pulseLed();
-	return res.redirect('/');
-};
-
-export const handleLedSideBySide = async (req: Request, res: Response) => {
-	await ledService.sideBySide();
+export const handleLedCommand = async (req: Request, res: Response) => {
+	const ledCommand = req.params['ledCommand'];
+	console.log('handleLedCommand : ' + ledCommand);
+	switch (ledCommand) {
+		case LedCommand.toggleLed:
+			await ledService.toggleLed();
+			break;
+		case LedCommand.cycleLed:
+			await ledService.sideBySide();
+			break;
+		case LedCommand.pulseLed:
+			await ledService.pulseLed();
+			break;
+	}
 	return res.redirect('/');
 };

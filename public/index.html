@@ -5,9 +5,24 @@
     <title>Title</title>
 </head>
 <body>
-<form name="myform" method="post" action="/">
-    <button type="submit">Toggle LED</button>
-</form>
+<ul>
+    <h2>LED Commands</h2>
+    <li>
+        <form name="toggle" method="post" action="/ledCommand/toggle">
+            <button type="submit">Toggle LED</button>
+        </form>
+    </li>
+    <li>
+        <form name="pulse" method="post" action="/ledCommand/pulse">
+            <button type="submit">Pulse LED</button>
+        </form>
+    </li>
+    <li>
+        <form name="cycle" method="post" action="/ledCommand/cycle">
+            <button type="submit">Cycle LEDs</button>
+        </form>
+    </li>
+</ul>
 
 </body>
 </html>

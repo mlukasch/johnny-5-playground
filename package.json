@@ -12,10 +12,12 @@
     "lodash": "^4.17.11",
     "nodemon": "^1.18.4",
     "tessel-io": "^1.2.0",
+    "ts-node": "^7.0.1",
     "typescript": "^3.0.3"
   },
   "devDependencies": {},
   "scripts": {
+    "dev": "nodemon -x ts-node ./src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": "www.github.com/tessel/t2-cli",

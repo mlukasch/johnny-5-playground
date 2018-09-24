@@ -13,7 +13,7 @@ const onLedCreated = _.memoize(async (pin: string = 'a5') => {
 });
 
 export const toggleLed = async () => {
-	const led = await onLedCreated();
+	const led = await onLedCreated('13');
 	led.toggle();
 };
 
@@ -22,7 +22,7 @@ const createPulseLed = () => {
 	// State:
 	let ledOn = false;
 	return async () => {
-		const led = await onLedCreated();
+		const led = await onLedCreated('11');
 		ledOn = !ledOn;
 		ledOn ? led.fadeIn(2000) : led.fadeOut(2000);
 	};
@@ -38,7 +38,7 @@ const createSideBySide = () => {
 			ledSideBySideId = null;
 		} else {
 			console.log('Turn Cycle on...');
-			ledSideBySideId = setInterval(createCycler(), 1000);
+			ledSideBySideId = setInterval(createCycler(), 200);
 		}
 	};
 };
@@ -46,16 +46,16 @@ const createSideBySide = () => {
 const createCycler = () => {
 	let pinIdx = 0;
 	let pinIdxInc = true;
-	const ledPins = ['a7', 'a6', 'a5', 'a4', 'a3', 'a2'];
+	const ledPins = ['13', '12', '11', '10', '9', '8'];
 	return () => {
 		console.log('Light up Led ' + ledPins[pinIdx]);
 		lightUpLed(ledPins[pinIdx]);
+		pinIdxInc ? pinIdx++ : pinIdx--;
 		if (pinIdx === 5) {
 			pinIdxInc = false;
 		} else if (pinIdx === 0) {
 			pinIdxInc = true;
 		}
-		pinIdxInc ? pinIdx++ : pinIdx--;
 	};
 };
 
@@ -64,6 +64,6 @@ export const sideBySide = createSideBySide();
 const lightUpLed = async (pin: string) => {
 	const led = await onLedCreated(pin);
 	led.on();
-	await promisify(setTimeout)(1000);
+	await promisify(setTimeout)(500);
 	led.off();
 };
