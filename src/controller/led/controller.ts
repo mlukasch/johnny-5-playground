@@ -4,7 +4,8 @@ import * as ledService from '../../services/ledService';
 enum LedCommand {
 	toggleLed = 'toggle',
 	cycleLed = 'cycle',
-	pulseLed = 'pulse'
+	pulseLed = 'pulse',
+	oneByOneOn = 'oneByOneOn'
 }
 
 export const handleLedCommand = async (req: Request, res: Response) => {
@@ -19,6 +20,9 @@ export const handleLedCommand = async (req: Request, res: Response) => {
 			break;
 		case LedCommand.pulseLed:
 			await ledService.pulseLed();
+			break;
+		case LedCommand.oneByOneOn:
+			await ledService.oneByOneOn();
 			break;
 	}
 	return res.redirect('/');

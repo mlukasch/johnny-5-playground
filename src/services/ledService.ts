@@ -29,27 +29,28 @@ const createPulseLed = () => {
 };
 export const pulseLed = createPulseLed();
 
-const createSideBySide = () => {
-	let ledSideBySideId: Timer | null = null;
+const repeater = <T>(loopedFunction: () => T, interval: number) => {
+	let intervalId: Timer | null = null;
 	return () => {
-		if (ledSideBySideId) {
+		if (intervalId) {
 			console.log('Turn Cycle off...');
-			clearInterval(ledSideBySideId);
-			ledSideBySideId = null;
+			clearInterval(intervalId);
+			intervalId = null;
 		} else {
 			console.log('Turn Cycle on...');
-			ledSideBySideId = setInterval(createCycler(), 200);
+			loopedFunction();
+			intervalId = setInterval(loopedFunction, interval);
 		}
 	};
 };
 
-const createCycler = () => {
+const createCycler = (ledHandler: (led: Led) => void) => {
 	let pinIdx = 0;
 	let pinIdxInc = true;
 	const ledPins = ['13', '12', '11', '10', '9', '8'];
-	return () => {
+	return async () => {
 		console.log('Light up Led ' + ledPins[pinIdx]);
-		lightUpLed(ledPins[pinIdx]);
+		onLedCreated(ledPins[pinIdx]).then(ledHandler);
 		pinIdxInc ? pinIdx++ : pinIdx--;
 		if (pinIdx === 5) {
 			pinIdxInc = false;
@@ -59,11 +60,30 @@ const createCycler = () => {
 	};
 };
 
-export const sideBySide = createSideBySide();
-
-const lightUpLed = async (pin: string) => {
-	const led = await onLedCreated(pin);
+const lightUpLed = async (led: Led) => {
 	led.on();
-	await promisify(setTimeout)(500);
+	await promisify(setTimeout)(100);
 	led.off();
 };
+
+export const sideBySide = repeater(createCycler(lightUpLed), 200);
+
+const lightOnLed = (led: Led) => {
+	led.on();
+};
+
+const cycleOnce = (ledHandler: (led: Led) => void) => {
+	const ledPins = ['13', '12', '11', '10', '9', '8'];
+	const onAllLedsReady = Promise.all(
+		ledPins.map((ledPin: string) => onLedCreated(ledPin))
+	);
+	return async () => {
+		const allLeds = await onAllLedsReady;
+		for (const led of allLeds) {
+			ledHandler(led);
+			await promisify(setTimeout)(200);
+		}
+		allLeds.forEach(led => led.off());
+	};
+};
+export const oneByOneOn = repeater(cycleOnce(lightOnLed), 2000);
